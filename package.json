@@ -1,0 +1,33 @@
+{
+  "name": "pixa",
+  "version": "1.0.0",
+  "description": "Twitter & Telegram bot that sends a random pic every hour.",
+  "engines": {
+    "node": "12.x",
+    "npm": "6.x"
+  },
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0",
+    "node-telegram-bot-api": "^0.40.0",
+    "twit": "^2.2.11",
+    "unsplash-js": "^6.0.0"
+  },
+  "keywords": [
+    "Pixa",
+    "Pixabot",
+    "bot",
+    "Twitter",
+    "Telegram",
+    "Unsplash",
+    "images",
+    "photos",
+    "pics"
+  ],
+  "author": "Osama",
+  "license": "MIT"
+}
