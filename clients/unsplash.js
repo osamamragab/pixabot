@@ -31,25 +31,27 @@ async function getPic() {
 
   // description is necessary for filtering
   if (!pic.description) {
-    logger('warning', `rejected ${pic.id} => it has no description`);
+    logger('rejected', `${pic.id} => it has no description`);
     return await getPic();
   }
 
   // filter
-  let notAllowedWords = pic.description.match(/boy|girl|boys|girls|man|men|woman|women|model|sexy|bikini|lips|kiss|hug|hugging|rose|fashion|underwear|lingerie|sensual|dress|buddha|mosque|masjed|church|temple/gi);
+  let notAllowedWords = pic.description.match(/boy|girl|man|men|woman|women|model|sexy|bikini|lip|kiss|hug|rose|fashion|underwear|lingerie|sensual|dress/gi);
   if (notAllowedWords) {
-    logger('warning', `rejected (${pic.id}) => it matches '${notAllowedWords}'`);
+    logger('rejected', `(${pic.id}) => it matches '${notAllowedWords}' - '${pic.description}'`);
     return await getPic();
+  } else {
+    logger('passed', `(${pic.id}) => '${pic.description}'`);
   }
 
   let { used } = JSON.parse(fs.readFileSync(dataPicsPath));
   if (used.includes(pic.id)) {
-    logger('warning', `rejected (${pic.id}) => used before`);
+    logger('rejected', `(${pic.id}) => used before`);
     return await getPic();
   }
 
   used.push(pic.id);
-  logger('msg', `getting (${pic.id})`);
+  logger('msg', `processing (${pic.id})`);
 
   let body = await fetch(pic.urls.regular).then(res => res.buffer());
   if (!body) {
