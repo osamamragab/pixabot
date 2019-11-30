@@ -1,4 +1,4 @@
-# Pixa :robot:
+# Pixa :robot: :framed_picture:
 
 
 ### Follow:
