@@ -5,43 +5,73 @@ const config = require('../config');
 const logger = require('../lib/logger');
 
 const Unsplash = require('unsplash-js');
+
 const fetch = require('node-fetch');
 global.fetch = fetch;
 
-const unsplash = new Unsplash.default(config.unsplash);
+const unsplash = new Unsplash.default(config.unsplash.auth);
 
-let tmpPath = path.join(__dirname, '..', 'data');
+let dataPath     = path.join(__dirname, '..', 'data');
+let tmpPicsPath  = path.join(dataPath, 'tmp');
+let dataPicsPath = path.join(dataPath, 'pics.json');
 
-if (!fs.existsSync(tmpPath)) fs.mkdirSync(tmpPath);
+// sync because it should be created before anything
+if (!fs.existsSync(dataPath)) fs.mkdirSync(dataPath);
+if (!fs.existsSync(tmpPicsPath)) fs.mkdirSync(tmpPicsPath);
+if (!fs.existsSync(dataPicsPath)) fs.writeFileSync(dataPicsPath, JSON.stringify({ used: [] }));
 
-const Pic = {};
+async function getPic() {
+  let pic = await unsplash.photos.getRandomPhoto({
+    featured: true,
+    orientation: 'landscape',
+    collections: config.unsplash.collectionIds
+  }).then(Unsplash.toJson);
 
-Pic.get = async id => await unsplash.photos.getPhoto(id).then(Unsplash.toJson);
-
-Pic.random = async () => {
-  let pic = await unsplash.photos.getRandomPhoto({ orientation: 'landscape' }).then(Unsplash.toJson);
   if (!pic) return logger('error', 'unsplash api error');
-  return pic;
-};
 
-Pic.download = async pic => {
-  pic = pic || await Pic.random();
-  if (!pic) return logger('error', 'unsplash api error');
-
+  // description is necessary for filtering
+  if (!pic.description) {
+    logger('warning', `rejected ${pic.id} => it has no description`);
+    return await getPic();
+  }
 
   // filter
-  if (pic.description && pic.description.match(/boy|girl|man|woman|men|women|human|face|model|people|sexy|bikini|lips|kiss|rose|fashion|underwear|lingerie|sensual|dress/gi)) pic = await Pic.random();
+  let notAllowedWords = pic.description.match(/boy|girl|boys|girls|man|men|woman|women|model|sexy|bikini|lips|kiss|hug|hugging|rose|fashion|underwear|lingerie|sensual|dress|buddha|mosque|masjed|church|temple/gi);
+  if (notAllowedWords) {
+    logger('warning', `rejected (${pic.id}) => it matches '${notAllowedWords}'`);
+    return await getPic();
+  }
+
+  let { used } = JSON.parse(fs.readFileSync(dataPicsPath));
+  if (used.includes(pic.id)) {
+    logger('warning', `rejected (${pic.id}) => used before`);
+    return await getPic();
+  }
+
+  used.push(pic.id);
+  logger('msg', `getting (${pic.id})`);
 
   let body = await fetch(pic.urls.regular).then(res => res.buffer());
-  if (!body) return logger('error', `empty body, id: ${pic.id}, url: ${pic.urls}}`);
+  if (!body) {
+    logger('warning', `empty body (${pic.id})`);
+    return await getPic();
+  }
 
-  await unsplash.photos.downloadPhoto(pic);
+  // set pic path
+  let picPath = path.join(tmpPicsPath, `pic-${pic.id}.jpg`);
 
-  let picPath = path.join(tmpPath, `pic-${pic.id}.jpg`);
-
+  // download pic to picPath
   fs.writeFileSync(picPath, body, 'binary');
 
-  return { pic, picPath };
-};
+  logger('msg', `(${pic.id}) downloaded successfully`);
 
-module.exports = Pic;
+  // submit downloading the photo
+  await unsplash.photos.downloadPhoto(pic);
+
+  // set pic id to the used pics
+  fs.writeFile(dataPicsPath, JSON.stringify({ used }), err => err && logger('error', err));
+
+  return { pic, picPath };
+}
+
+module.exports = getPic;
