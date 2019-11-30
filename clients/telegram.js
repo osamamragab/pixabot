@@ -7,6 +7,6 @@ const bot = new TelegramBot(config.telegram.token, { polling: true });
 module.exports = (pic, picPath, caption) => {
   bot
     .sendPhoto(config.telegram.channel, picPath, { caption })
-    .then(msg => logger('success', `(telegram@${pic.id}): success!`))
+    .then(msg => logger('success', `(telegram#${pic.id}): https://t.me/${msg.chat.username}/${msg.message_id}`))
     .catch(err => logger('error', err));
 };
