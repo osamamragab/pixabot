@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 
 const logger = require('./lib/logger');
 
@@ -7,10 +6,8 @@ const unsplash  = require('./clients/unsplash');
 const twitter   = require('./clients/twitter');
 const telegram  = require('./clients/telegram');
 
-if (!fs.existsSync(path.join(__dirname, 'data'))) fs.mkdirSync(path.join(__dirname, 'data'));
-
 async function main() {
-  let { pic, picPath } = await unsplash.download();
+  let { pic, picPath } = await unsplash();
   let caption = `by: ${pic.user.name.trim()}`;
 
   if (!pic || !picPath) return logger('error', 'unsplash api error');
@@ -18,6 +15,14 @@ async function main() {
 
   twitter(pic, picPath, caption);
   telegram(pic, picPath, caption);
+
+  // remove the pic after one minute
+  setTimeout(() => {
+    if (fs.existsSync(picPath)) {
+      fs.unlinkSync(picPath);
+      logger('msg', `${picPath} removed`);
+    }
+  }, 60 * 1000);
 }
 
 main();
