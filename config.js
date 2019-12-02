@@ -1,11 +1,10 @@
-const dotenv = require('dotenv');
-dotenv.config();
+'use strict';
 
 module.exports = {
   unsplash: {
     auth: {
-      accessKey: process.env.UNSPLASH_ACCESS_KEY,
-      secretKey: process.env.UNSPLASH_SECRET_KEY,
+      accessKey: process.env.unsplashAccessKey,
+      secretKey: process.env.unsplashSecretKey,
     },
     collectionIds: [
       '175', '176', '180',  '183', '185', '187',  '187', '188', '192',
@@ -27,15 +26,15 @@ module.exports = {
     ]
   },
   twitter: {
-    consumer_key: process.env.TWITTER_CONSUMER_KEY,
-    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-    access_token: process.env.TWITTER_ACCESS_TOKEN,
-    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+    consumer_key: process.env.twitterConsumerKey,
+    consumer_secret: process.env.twitterConsumerSecret,
+    access_token: process.env.twitterAccessToken,
+    access_token_secret: process.env.twitterAccessTokenSecret,
     timeout_ms: 60 * 1000,
     strictSSL: true
   },
   telegram: {
-    token: process.env.TELEGRAM_TOKEN,
-    channel: process.env.TELEGRAM_CHANNEL
+    token: process.env.telegramToken,
+    chat: process.env.telegramChat
   }
 };

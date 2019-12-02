@@ -1,10 +1,31 @@
+'use strict';
+
 const fs = require('fs');
+
+const dotenv = require('dotenv');
 
 const logger = require('./lib/logger');
 
 const unsplash  = require('./clients/unsplash');
 const twitter   = require('./clients/twitter');
 const telegram  = require('./clients/telegram');
+
+dotenv.config();
+
+if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
+  logger('error', 'unsplash keys error');
+  process.exit(1);
+}
+
+if (!process.env.twitterConsumerKey || !process.env.twitterConsumerSecret || !process.env.twitterAccessToken || !process.env.twitterAccessTokenSecret) {
+  logger('error', 'twitter keys error');
+  process.exit(1);
+}
+
+if (!process.env.telegramToken || !process.env.telegramChat) {
+  logger('error', 'telegram bot token/chat not found');
+  process.exit(1);
+}
 
 async function main() {
   let { pic, picPath } = await unsplash();
