@@ -20,7 +20,7 @@ if (!fs.existsSync(dataPath)) fs.mkdirSync(dataPath);
 if (!fs.existsSync(tmpPicsPath)) fs.mkdirSync(tmpPicsPath);
 if (!fs.existsSync(dataPicsPath)) fs.writeFileSync(dataPicsPath, JSON.stringify({ used: [] }));
 
-module.exports = async () => {
+async function getPic() {
   try {
     const pic = await unsplash.photos
       .getRandomPhoto({
@@ -74,4 +74,6 @@ module.exports = async () => {
   } catch (err) {
     logger('error', err);
   }
-};
+}
+
+module.exports = getPic;
