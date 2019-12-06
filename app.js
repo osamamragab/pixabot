@@ -1,14 +1,8 @@
 'use strict';
 
 const fs = require('fs');
-
 const dotenv = require('dotenv');
-
 const logger = require('./lib/logger');
-
-const unsplash = require('./clients/unsplash');
-const twitter = require('./clients/twitter');
-const telegram = require('./clients/telegram');
 
 dotenv.config();
 
@@ -31,6 +25,10 @@ if (!process.env.telegramToken || !process.env.telegramChat) {
   logger('error', 'telegram bot token/chat not found');
   process.exit(1);
 }
+
+const unsplash = require('./clients/unsplash');
+const twitter = require('./clients/twitter');
+const telegram = require('./clients/telegram');
 
 async function main() {
   try {

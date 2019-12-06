@@ -1,14 +1,12 @@
 'use strict';
 
+const Unsplash = require('unsplash-js');
+const fetch = require('node-fetch');
+const config = require('../config');
+const logger = require('../lib/logger');
 const fs = require('fs');
 const path = require('path');
 
-const config = require('../config');
-const logger = require('../lib/logger');
-
-const Unsplash = require('unsplash-js');
-
-const fetch = require('node-fetch');
 global.fetch = fetch;
 
 const unsplash = new Unsplash.default(config.unsplash.auth);
