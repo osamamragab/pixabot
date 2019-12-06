@@ -6,9 +6,9 @@ const dotenv = require('dotenv');
 
 const logger = require('./lib/logger');
 
-const unsplash  = require('./clients/unsplash');
-const twitter   = require('./clients/twitter');
-const telegram  = require('./clients/telegram');
+const unsplash = require('./clients/unsplash');
+const twitter = require('./clients/twitter');
+const telegram = require('./clients/telegram');
 
 dotenv.config();
 
@@ -17,7 +17,12 @@ if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
   process.exit(1);
 }
 
-if (!process.env.twitterConsumerKey || !process.env.twitterConsumerSecret || !process.env.twitterAccessToken || !process.env.twitterAccessTokenSecret) {
+if (
+  !process.env.twitterConsumerKey ||
+  !process.env.twitterConsumerSecret ||
+  !process.env.twitterAccessToken ||
+  !process.env.twitterAccessTokenSecret
+) {
   logger('error', 'twitter keys error');
   process.exit(1);
 }
@@ -28,22 +33,26 @@ if (!process.env.telegramToken || !process.env.telegramChat) {
 }
 
 async function main() {
-  let { pic, picPath } = await unsplash();
-  let caption = `by: ${pic.user.name.trim()}`;
+  try {
+    let { pic, picPath } = await unsplash();
+    let caption = `by: ${pic.user.name.trim()}`;
 
-  if (!pic || !picPath) return logger('error', 'unsplash api error');
-  if (!fs.existsSync(picPath)) return logger('error', `pic doesn't exists`);
+    if (!pic || !picPath) return logger('error', 'unsplash api error');
+    if (!fs.existsSync(picPath)) return logger('error', `pic doesn't exists`);
 
-  twitter(pic, picPath, caption);
-  telegram(pic, picPath, caption);
+    twitter(pic, picPath, caption);
+    telegram(pic, picPath, caption);
 
-  // remove the pic after one minute
-  setTimeout(() => {
-    if (fs.existsSync(picPath)) {
-      fs.unlinkSync(picPath);
-      logger('msg', `${picPath} removed`);
-    }
-  }, 60 * 1000);
+    // remove the pic after one minute
+    setTimeout(() => {
+      if (fs.existsSync(picPath)) {
+        fs.unlinkSync(picPath);
+        logger('msg', `${picPath} removed`);
+      }
+    }, 60 * 1000);
+  } catch (err) {
+    logger('error', err);
+  }
 }
 
 main();
