@@ -40,6 +40,7 @@ module.exports = (pic, picPath, caption) => {
       },
       (err, data) => {
         if (err) return logger('error', err);
+
         logger(
           'success',
           `(twitter#${pic.id}): https://twitter.com/${data.user.screen_name}/status/${data.id_str}`
