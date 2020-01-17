@@ -1,10 +1,16 @@
 'use strict';
 
+const TelegramBot = require('node-telegram-bot-api');
+
 const config = require('../config');
 const logger = require('../lib/logger');
 
-const TelegramBot = require('node-telegram-bot-api');
-const bot = new TelegramBot(config.telegram.token, { polling: true });
+const bot = new TelegramBot(config.telegram.token, {
+  // polling: true,
+  webHook: { port: config.heroku.port }
+});
+
+bot.setWebHook(`${config.heroku.url}/bot${config.telegram.token}`);
 
 module.exports = (pic, picPath, caption) => {
   bot

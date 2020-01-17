@@ -1,6 +1,10 @@
 'use strict';
 
 module.exports = {
+  heroku: {
+    url: process.env.APP_URL || 'https://twpixabot.herokuapp.com/',
+    port: process.env.PORT || 3500
+  },
   unsplash: {
     auth: {
       accessKey: process.env.unsplashAccessKey,

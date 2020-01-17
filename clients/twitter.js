@@ -1,9 +1,10 @@
 'use strict';
 
+const Twit = require('twit');
+
 const config = require('../config');
 const logger = require('../lib/logger');
 
-const Twit = require('twit');
 const bot = new Twit(config.twitter);
 
 module.exports = (pic, picPath, caption) => {
@@ -23,7 +24,7 @@ module.exports = (pic, picPath, caption) => {
             screen_name: twUsername
           },
           err => {
-            if (err) return logger('error', err);
+            if (err) return;
 
             caption += ` (@${twUsername})`;
           }
