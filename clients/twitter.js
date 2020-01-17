@@ -7,7 +7,7 @@ const Twit = require('twit');
 const bot = new Twit(config.twitter);
 
 module.exports = (pic, picPath, caption) => {
-  bot.postMediaChunked({ file_path: picPath }, (err, data, res) => {
+  bot.postMediaChunked({ file_path: picPath }, (err, data) => {
     if (err) return logger('error', err);
 
     if (pic.user.twitter_username) {
