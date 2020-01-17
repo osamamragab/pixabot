@@ -37,8 +37,9 @@ async function getPic() {
     }
 
     // filter
-    const notAllowedWords = /boy|girl|man|men|woman|women|model|sexy|bikini|lip|kiss|hug|rose|fashion|underwear|lingerie|sensual|dress/gi;
-    const picDscrptnMatch = pic.description.match(notAllowedWords);
+    const picDscrptnMatch = pic.description.match(
+      /boy|girl|man|men|woman|women|model|sexy|panties|naked|swimsuit|bikini|lip|kiss|hug|rose|fashion|underwear|lingerie|sensual|dress/gi
+    );
     if (picDscrptnMatch) {
       logger('rejected', `(${pic.id}) => it matches '${picDscrptnMatch}' - '${pic.description}'`);
       return await getPic();
