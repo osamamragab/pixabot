@@ -33,7 +33,7 @@ const telegram = require('./clients/telegram');
 async function main() {
   try {
     let { pic, picPath } = await unsplash();
-    let caption = `by: ${pic.user.name.trim()}`;
+    let caption = `by: ${pic.user.name.trim()} (${pic.user.links.html})`;
 
     if (!pic || !picPath) return logger('error', 'unsplash api error');
     if (!fs.existsSync(picPath)) return logger('error', `pic doesn't exists`);

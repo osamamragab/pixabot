@@ -11,27 +11,6 @@ module.exports = (pic, picPath, caption) => {
   bot.postMediaChunked({ file_path: picPath }, (err, data) => {
     if (err) return logger('error', err);
 
-    if (pic.user.twitter_username) {
-      const twUsername = pic.user.twitter_username.trim();
-      if (twUsername.startsWith('@')) twUsername = twUsername.slice(1);
-
-      if (!caption.includes(`@${twUsername}`)) {
-        logger(`getting twitter user: ${twUsername}`);
-
-        bot.get(
-          'users/show',
-          {
-            screen_name: twUsername
-          },
-          err => {
-            if (err) return;
-
-            caption += ` (@${twUsername})`;
-          }
-        );
-      }
-    }
-
     bot.post(
       'statuses/update',
       {
