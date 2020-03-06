@@ -1,13 +1,20 @@
-'use strict';
-
-const fs = require('fs');
+const Unsplash = require('unsplash-js');
+const Twit = require('twit');
+const TelegramBot = require('node-telegram-bot-api');
+const fetch = require('node-fetch');
+const { promises: fs, existsSync } = require('fs');
 const dotenv = require('dotenv');
 const logger = require('./lib/logger');
 
 dotenv.config();
 
+// for unsplash
+global.fetch = fetch;
+
+const dataPath = path.join(__dirname, 'data');
+
 if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
-  logger('error', 'unsplash keys error');
+  console.error('[error]: unsplash keys error');
   process.exit(1);
 }
 
@@ -17,35 +24,79 @@ if (
   !process.env.twitterAccessToken ||
   !process.env.twitterAccessTokenSecret
 ) {
-  logger('error', 'twitter keys error');
+  console.error('[error]: twitter keys');
   process.exit(1);
 }
 
 if (!process.env.telegramToken || !process.env.telegramChat) {
-  logger('error', 'telegram bot token/chat not found');
+  console.error('telegram bot token/chat not found');
   process.exit(1);
 }
 
-const unsplash = require('./clients/unsplash');
-const twitter = require('./clients/twitter');
-const telegram = require('./clients/telegram');
+// check for data directory
+(async () => !existsSync(dataPath) && await fs.mkdir(dataPath))();
+
+const unsplash = new Unsplash.default({
+  accessKey: process.env.unsplashAccessKey,
+  secretKey: process.env.unsplashSecretKey
+});
+
+const twBot = new Twit({
+  consumer_key: process.env.twitterConsumerKey,
+  consumer_secret: process.env.twitterConsumerSecret,
+  access_token: process.env.twitterAccessToken,
+  access_token_secret: process.env.twitterAccessTokenSecret,
+  timeout_ms: 60 * 1000,
+  strictSSL: true
+})
+
+const tgBot = new TelegramBot(process.env.telegramToken);
 
 async function main() {
   try {
-    let { pic, picPath } = await unsplash();
-    let caption = `by: ${pic.user.name.trim()} (${pic.user.links.html})`;
+    // get random pic from unsplash api
+    const pic = await unsplash.photos.getRandomPhoto({ featured: true, orientation: 'landscape' }).then(Unsplash.toJson);
 
-    if (!pic || !picPath) return logger('error', 'unsplash api error');
-    if (!fs.existsSync(picPath)) return logger('error', `pic doesn't exists`);
+    // get pic buffer
+    const picBuffer = await fetch(pic.urls.regular).then(res => res.buffer());
 
-    twitter(pic, picPath, caption);
-    telegram(pic, picPath, caption);
+    // set pic path
+    const picPath = path.join(dataPath, `${pic.id}.jpg`);
+
+    // download pic
+    await fs.writeFile(picPath, picBuffer, 'binary');
+
+    logger('msg', `(${pic.id}) downloaded successfully`);
+
+    // set caption
+    const caption = `by: ${pic.user.name.trim()}`;
+
+    twBot.postMediaChunked({ file_path: picPath }, (err, data) => {
+      if (err) return logger('error', err);
+
+      twBot.post(
+        'statuses/update',
+        {
+          status: caption,
+          media_ids: [data.media_id_string]
+        },
+        (err, data) => {
+          if (err) return logger('error', err);
+
+          console.log(`(twitter#${pic.id}): https://twitter.com/${data.user.screen_name}/status/${data.id_str}`);
+        }
+      );
+    });
+
+    const tgMsg = await bot.sendPhoto(process.env.telegramChat, picPath, { caption })
+    console.log(`(telegram#${pic.id}): https://t.me/${tgMsg.chat.username}/${tgMsg.message_id}`);
+
 
     // remove the pic after one minute
     setTimeout(() => {
-      if (fs.existsSync(picPath)) {
-        fs.unlinkSync(picPath);
-        logger('msg', `${picPath} removed`);
+      if (existsSync(picPath)) {
+        await fs.unlink(picPath);
+        console.log(`${picPath} was removed`);
       }
     }, 60 * 1000);
   } catch (err) {
