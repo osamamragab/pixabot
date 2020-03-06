@@ -11,6 +11,7 @@ dotenv.config();
 // for unsplash
 global.fetch = fetch;
 
+// where the pics will be downloaded to
 const dataPath = path.join(__dirname, 'data');
 
 if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
@@ -66,7 +67,6 @@ async function main() {
     // get pic buffer
     const picBuffer = await fetch(pic.urls.regular).then(res => res.buffer());
 
-    // set pic path
     const picName = `${pic.id}.jpg`;
     const picPath = path.join(dataPath, picName);
 
@@ -80,7 +80,7 @@ async function main() {
 
     // send to twitter
     twBot.postMediaChunked({ file_path: picPath }, (err, data) => {
-      if (err) return console.error(err);
+      if (err) throw err;
 
       twBot.post(
         'statuses/update',
@@ -88,27 +88,30 @@ async function main() {
           status: caption,
           media_ids: [data.media_id_string]
         },
-        async (err, data) => {
-          if (err) return console.error(err);
+        async (err, statusData) => {
+          try {
+            if (err) throw err;
 
-          // twitter success message
-          console.log(
-            `(twitter#${pic.id}): https://twitter.com/${data.user.screen_name}/status/${data.id_str}`
-          );
+            // twitter success message
+            console.log(
+              `(twitter#${pic.id}): https://twitter.com/${statusData.user.screen_name}/status/${statusData.id_str}`
+            );
 
-          // send to telegram
-          const tgMsg = await tgBot.sendPhoto(process.env.telegramChat, picPath, { caption });
+            // send to telegram
+            const tgMsg = await tgBot.sendPhoto(process.env.telegramChat, picPath, { caption });
 
-          // telegram success message
-          console.log(
-            `(telegram#${pic.id}): https://t.me/${tgMsg.chat.username}/${tgMsg.message_id}`
-          );
+            // telegram success message
+            console.log(
+              `(telegram#${pic.id}): https://t.me/${tgMsg.chat.username}/${tgMsg.message_id}`
+            );
 
-          // remove pic from data/
-          await fs.unlink(picPath);
+            // remove pic from data/
+            await fs.unlink(picPath);
 
-          // logging removal
-          console.log(`(${picName}) was removed`);
+            console.log(`(${picName}) was removed`);
+          } catch (err) {
+            console.error(err);
+          }
         }
       );
     });
