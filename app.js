@@ -2,9 +2,9 @@ const Unsplash = require('unsplash-js');
 const Twit = require('twit');
 const TelegramBot = require('node-telegram-bot-api');
 const fetch = require('node-fetch');
-const { promises: fs, existsSync } = require('fs');
 const dotenv = require('dotenv');
-const logger = require('./lib/logger');
+const path = require('path');
+const { promises: fs, existsSync } = require('fs');
 
 dotenv.config();
 
@@ -34,7 +34,11 @@ if (!process.env.telegramToken || !process.env.telegramChat) {
 }
 
 // check for data directory
-(async () => !existsSync(dataPath) && await fs.mkdir(dataPath))();
+(async () => {
+  if (!existsSync(dataPath)) {
+    await fs.mkdir(dataPath);
+  }
+})();
 
 const unsplash = new Unsplash.default({
   accessKey: process.env.unsplashAccessKey,
@@ -48,31 +52,35 @@ const twBot = new Twit({
   access_token_secret: process.env.twitterAccessTokenSecret,
   timeout_ms: 60 * 1000,
   strictSSL: true
-})
+});
 
 const tgBot = new TelegramBot(process.env.telegramToken);
 
 async function main() {
   try {
     // get random pic from unsplash api
-    const pic = await unsplash.photos.getRandomPhoto({ featured: true, orientation: 'landscape' }).then(Unsplash.toJson);
+    const pic = await unsplash.photos
+      .getRandomPhoto({ featured: true, orientation: 'landscape' })
+      .then(Unsplash.toJson);
 
     // get pic buffer
     const picBuffer = await fetch(pic.urls.regular).then(res => res.buffer());
 
     // set pic path
-    const picPath = path.join(dataPath, `${pic.id}.jpg`);
+    const picName = `${pic.id}.jpg`;
+    const picPath = path.join(dataPath, picName);
 
     // download pic
     await fs.writeFile(picPath, picBuffer, 'binary');
 
-    logger('msg', `(${pic.id}) downloaded successfully`);
+    console.log(`(${picName}) downloaded successfully`);
 
     // set caption
     const caption = `by: ${pic.user.name.trim()}`;
 
+    // send to twitter
     twBot.postMediaChunked({ file_path: picPath }, (err, data) => {
-      if (err) return logger('error', err);
+      if (err) return console.error(err);
 
       twBot.post(
         'statuses/update',
@@ -80,27 +88,32 @@ async function main() {
           status: caption,
           media_ids: [data.media_id_string]
         },
-        (err, data) => {
-          if (err) return logger('error', err);
+        async (err, data) => {
+          if (err) return console.error(err);
 
-          console.log(`(twitter#${pic.id}): https://twitter.com/${data.user.screen_name}/status/${data.id_str}`);
+          // twitter success message
+          console.log(
+            `(twitter#${pic.id}): https://twitter.com/${data.user.screen_name}/status/${data.id_str}`
+          );
+
+          // send to telegram
+          const tgMsg = await tgBot.sendPhoto(process.env.telegramChat, picPath, { caption });
+
+          // telegram success message
+          console.log(
+            `(telegram#${pic.id}): https://t.me/${tgMsg.chat.username}/${tgMsg.message_id}`
+          );
+
+          // remove pic from data/
+          await fs.unlink(picPath);
+
+          // logging removal
+          console.log(`(${picName}) was removed`);
         }
       );
     });
-
-    const tgMsg = await bot.sendPhoto(process.env.telegramChat, picPath, { caption })
-    console.log(`(telegram#${pic.id}): https://t.me/${tgMsg.chat.username}/${tgMsg.message_id}`);
-
-
-    // remove the pic after one minute
-    setTimeout(() => {
-      if (existsSync(picPath)) {
-        await fs.unlink(picPath);
-        console.log(`${picPath} was removed`);
-      }
-    }, 60 * 1000);
   } catch (err) {
-    logger('error', err);
+    console.error(err);
   }
 }
 
