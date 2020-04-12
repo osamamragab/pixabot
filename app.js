@@ -1,13 +1,8 @@
-const getPic = require('./utils/getPic');
-const download = require('./utils/download');
-const push = require('./utils/push');
 const dotenv = require('dotenv');
 const path = require('path');
 const { promises: fs, existsSync } = require('fs');
 
-if (process.env.NODE_ENV === 'development') {
-  dotenv.config();
-}
+dotenv.config();
 
 // where the pics will be downloaded to
 const tmpPath = path.join(__dirname, 'tmp');
@@ -17,7 +12,7 @@ if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
   process.exit(1);
 }
 
-if (!process.env.pexelsAPIKEY) {
+if (!process.env.pexelsAPIKey) {
   console.error('[error]: pexels api key not found.');
   process.exit(1);
 }
@@ -37,6 +32,10 @@ if (!process.env.telegramToken || !process.env.telegramChat) {
   process.exit(1);
 }
 
+const getPic = require('./utils/getPic');
+const download = require('./utils/download');
+const push = require('./utils/push');
+
 // check for data directory
 (async () => {
   if (!existsSync(tmpPath)) {
@@ -55,7 +54,7 @@ async function main() {
     console.log(`(${pic.id}) downloaded to ${picPath} successfully`);
 
     // set caption
-    const caption = `by: ${pic.user.name.trim()} on ${pic.platfrom}`;
+    const caption = `by: ${pic.author.name.trim()} on ${pic.platfrom}`;
 
     // upload the pic to all platforms
     await push(picPath, caption);
@@ -65,7 +64,7 @@ async function main() {
 
     console.log(`(${picPath}) was removed`);
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
 }
 
