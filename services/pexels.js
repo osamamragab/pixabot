@@ -21,35 +21,4 @@ module.exports = async () => {
       profile: pic.photographer_url
     }
   };
-
-  /*
-    // get the author's social media links
-    const profileHTML = await fetch(pic.photographer_url, {
-      headers: {
-        Authorization: process.env.pexelsAPIKey
-      }
-    }).then(res => res.text());
-    return profileHTML;
-    const matchTwitterURL = profileHTML.match(
-      /data-track-action=\'profile\'\s*data-track-label=\'twitter-link\'\s*href=\'(.+?)\'/i
-    );
-    const matchInstagramURL = profileHTML.match(
-      /data-track-action=\'profile\'\s*data-track-label=\'instagram-link\'\s*href=\'(.+?)\'/i
-    );
-    const matchWebsiteURL = profileHTML.match(
-      /data-track-action=\'user-website\'\s*data-track-label=\'(.+?)\'\s*href=\'(.+?)\'/i
-    );
-
-    data.author.twitter = Array.isArray(matchTwitterURL)
-      ? matchTwitterURL[1]
-      : null;
-
-    data.author.instagram = Array.isArray(matchInstagramURL)
-      ? matchInstagramURL[1]
-      : null;
-
-    data.author.website = Array.isArray(matchWebsiteURL)
-      ? matchWebsiteURL[1]
-      : null;
-  */
 };
