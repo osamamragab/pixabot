@@ -1,5 +1,6 @@
 const { IgApiClient } = require('instagram-private-api');
 const { promises: fs } = require('fs');
+
 const { instagramUsername, instagramPassword } = process.env;
 
 const ig = new IgApiClient();
