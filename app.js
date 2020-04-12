@@ -2,7 +2,9 @@ const dotenv = require('dotenv');
 const path = require('path');
 const { promises: fs, existsSync } = require('fs');
 
-dotenv.config();
+if (process.env.NODE_ENV === 'development') {
+  dotenv.config();
+}
 
 if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
   console.error('[error]: unsplash api keys not found.');
