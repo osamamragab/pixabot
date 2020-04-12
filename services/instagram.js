@@ -5,10 +5,16 @@ const { instagramUsername, instagramPassword } = process.env;
 
 const ig = new IgApiClient();
 
-ig.state.generateDevice(instagramUsername);
+let loggedInUser;
 
 module.exports = async (picPath, caption) => {
-  await ig.account.login(instagramUsername, instagramPassword);
+  if (!loggedInUser) {
+    ig.state.generateDevice(instagramUsername);
+
+    loggedInUser = await ig.account.login(instagramUsername, instagramPassword);
+
+    console.log('instagram logged in successfully');
+  }
 
   const mediaRepo = await ig.publish.photo({
     file: await fs.readFile(picPath),
@@ -16,7 +22,7 @@ module.exports = async (picPath, caption) => {
   });
 
   console.log(
-    `(instagram): https://www.instagram.com/p/${mediaRepo.upload_id}`
+    `(instagram): https://www.instagram.com/p/${mediaRepo.media.code}`
   );
 
   return mediaRepo;
