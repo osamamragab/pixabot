@@ -1,7 +1,7 @@
 {
   "name": "pixa",
   "version": "1.4.0",
-  "description": "Post daily pic - from unsplash.com & pexels.com to Twitter, Instagram & Telegram.",
+  "description": "Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram & Instagram.",
   "author": "Osama",
   "license": "MIT",
   "repository": "osamaify/pixabot",
