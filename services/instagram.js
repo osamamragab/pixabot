@@ -11,7 +11,9 @@ ig.state.generateDevice(instagramUsername);
 
   await ig.account.login(instagramUsername, instagramPassword);
 
-  process.nextTick(async () => await ig.simulate.postLoginFlow());
+  process.nextTick(async () => {
+    await ig.simulate.postLoginFlow();
+  });
 })();
 
 module.exports = async (picPath, caption) => {
