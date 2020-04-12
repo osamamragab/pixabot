@@ -4,9 +4,6 @@ const { promises: fs, existsSync } = require('fs');
 
 dotenv.config();
 
-// where the pics will be downloaded to
-const tmpPath = path.join(__dirname, 'tmp');
-
 if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
   console.error('[error]: unsplash api keys not found.');
   process.exit(1);
@@ -32,9 +29,8 @@ if (!process.env.telegramToken || !process.env.telegramChat) {
   process.exit(1);
 }
 
-const getPic = require('./utils/getPic');
-const download = require('./utils/download');
-const push = require('./utils/push');
+// where the pics will be downloaded to
+const tmpPath = path.join(__dirname, 'tmp');
 
 // check for data directory
 (async () => {
@@ -42,6 +38,10 @@ const push = require('./utils/push');
     await fs.mkdir(tmpPath);
   }
 })();
+
+const getPic = require('./utils/getPic');
+const download = require('./utils/download');
+const push = require('./utils/push');
 
 async function main() {
   try {
