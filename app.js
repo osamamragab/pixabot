@@ -1,7 +1,4 @@
-const twitter = require('./services/twitter');
-const telegram = require('./services/telegram');
-const unsplash = require('./services/unsplash');
-const pexels = require('./services/pexels');
+const getPic = require('./utils/getPic');
 const download = require('./utils/download');
 const push = require('./utils/push');
 const dotenv = require('dotenv');
@@ -13,7 +10,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // where the pics will be downloaded to
-const dataPath = path.join(__dirname, 'data');
+const tmpPath = path.join(__dirname, 'tmp');
 
 if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
   console.error('[error]: unsplash api keys not found.');
@@ -42,68 +39,31 @@ if (!process.env.telegramToken || !process.env.telegramChat) {
 
 // check for data directory
 (async () => {
-  if (!existsSync(dataPath)) {
-    await fs.mkdir(dataPath);
+  if (!existsSync(tmpPath)) {
+    await fs.mkdir(tmpPath);
   }
 })();
 
 async function main() {
   try {
-    // get pic buffer
-    const picBuffer = await fetch(pic.urls.regular).then(res => res.buffer());
+    // get the random pic
+    const pic = await getPic();
 
-    const picName = `${pic.id}.jpg`;
-    const picPath = path.join(dataPath, picName);
+    // download it
+    const picPath = await download(pic.urls.medium);
 
-    // download pic
-    await fs.writeFile(picPath, picBuffer, 'binary');
-
-    console.log(`(${picName}) downloaded successfully`);
+    console.log(`(${pic.id}) downloaded to ${picPath} successfully`);
 
     // set caption
-    const caption = `by: ${pic.user.name.trim()}`;
+    const caption = `by: ${pic.user.name.trim()} on ${pic.platfrom}`;
 
-    // send to twitter
-    twBot.postMediaChunked({ file_path: picPath }, (err, data) => {
-      if (err) throw err;
+    // upload the pic to all platforms
+    await push(picPath, caption);
 
-      twBot.post(
-        'statuses/update',
-        {
-          status: caption,
-          media_ids: [data.media_id_string]
-        },
-        async (err, statusData) => {
-          try {
-            if (err) throw err;
+    // remove file
+    await fs.unlink(picPath);
 
-            // twitter success message
-            console.log(
-              `(twitter#${pic.id}): https://twitter.com/${statusData.user.screen_name}/status/${statusData.id_str}`
-            );
-
-            // send to telegram
-            const tgMsg = await tgBot.sendPhoto(
-              process.env.telegramChat,
-              picPath,
-              { caption }
-            );
-
-            // telegram success message
-            console.log(
-              `(telegram#${pic.id}): https://t.me/${tgMsg.chat.username}/${tgMsg.message_id}`
-            );
-
-            // remove pic from data/
-            await fs.unlink(picPath);
-
-            console.log(`(${picName}) was removed`);
-          } catch (err) {
-            console.error(err);
-          }
-        }
-      );
-    });
+    console.log(`(${picPath}) was removed`);
   } catch (err) {
     console.error(err);
   }
