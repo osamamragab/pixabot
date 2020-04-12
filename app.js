@@ -1,21 +1,27 @@
-const Unsplash = require('unsplash-js');
-const Twit = require('twit');
-const TelegramBot = require('node-telegram-bot-api');
-const fetch = require('node-fetch');
+const twitter = require('./services/twitter');
+const telegram = require('./services/telegram');
+const unsplash = require('./services/unsplash');
+const pexels = require('./services/pexels');
+const download = require('./utils/download');
+const push = require('./utils/push');
 const dotenv = require('dotenv');
 const path = require('path');
 const { promises: fs, existsSync } = require('fs');
 
-dotenv.config();
-
-// for unsplash
-global.fetch = fetch;
+if (process.env.NODE_ENV === 'development') {
+  dotenv.config();
+}
 
 // where the pics will be downloaded to
 const dataPath = path.join(__dirname, 'data');
 
 if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
-  console.error('[error]: unsplash keys error');
+  console.error('[error]: unsplash api keys not found.');
+  process.exit(1);
+}
+
+if (!process.env.pexelsAPIKEY) {
+  console.error('[error]: pexels api key not found.');
   process.exit(1);
 }
 
@@ -25,12 +31,12 @@ if (
   !process.env.twitterAccessToken ||
   !process.env.twitterAccessTokenSecret
 ) {
-  console.error('[error]: twitter keys');
+  console.error('[error]: twitter api keys not found.');
   process.exit(1);
 }
 
 if (!process.env.telegramToken || !process.env.telegramChat) {
-  console.error('telegram bot token/chat not found');
+  console.error('telegram bot token/chat not found.');
   process.exit(1);
 }
 
@@ -41,29 +47,8 @@ if (!process.env.telegramToken || !process.env.telegramChat) {
   }
 })();
 
-const unsplash = new Unsplash.default({
-  accessKey: process.env.unsplashAccessKey,
-  secretKey: process.env.unsplashSecretKey
-});
-
-const twBot = new Twit({
-  consumer_key: process.env.twitterConsumerKey,
-  consumer_secret: process.env.twitterConsumerSecret,
-  access_token: process.env.twitterAccessToken,
-  access_token_secret: process.env.twitterAccessTokenSecret,
-  timeout_ms: 60 * 1000,
-  strictSSL: true
-});
-
-const tgBot = new TelegramBot(process.env.telegramToken);
-
 async function main() {
   try {
-    // get random pic from unsplash api
-    const pic = await unsplash.photos
-      .getRandomPhoto({ featured: true, orientation: 'landscape' })
-      .then(Unsplash.toJson);
-
     // get pic buffer
     const picBuffer = await fetch(pic.urls.regular).then(res => res.buffer());
 
@@ -98,7 +83,11 @@ async function main() {
             );
 
             // send to telegram
-            const tgMsg = await tgBot.sendPhoto(process.env.telegramChat, picPath, { caption });
+            const tgMsg = await tgBot.sendPhoto(
+              process.env.telegramChat,
+              picPath,
+              { caption }
+            );
 
             // telegram success message
             console.log(
