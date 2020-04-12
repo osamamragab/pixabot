@@ -16,6 +16,7 @@
     "dev": "nodemon app.js"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^6.0.0",
     "instagram-private-api": "^1.39.2",
@@ -26,7 +27,6 @@
     "unsplash-js": "^6.0.0"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0",
     "nodemon": "^2.0.3"
   }
 }
