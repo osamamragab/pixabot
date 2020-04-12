@@ -37,7 +37,7 @@ if (!process.env.instagramUsername || !process.env.instagramPassword) {
 // where the pics will be downloaded to
 const tmpPath = path.join(__dirname, 'tmp');
 
-// check for data directory
+// check for tmp directory
 (async () => {
   if (!existsSync(tmpPath)) {
     await fs.mkdir(tmpPath);
@@ -61,7 +61,7 @@ async function main() {
     // set caption
     const caption = `by: ${pic.author.name.trim()} on ${pic.platfrom}`;
 
-    // upload the pic to all platforms
+    // publish the pic to all platforms
     await push(picPath, caption);
 
     // remove file
