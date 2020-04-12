@@ -25,7 +25,12 @@ if (
 }
 
 if (!process.env.telegramToken || !process.env.telegramChat) {
-  console.error('telegram bot token/chat not found.');
+  console.error('[error]: telegram bot token/chat not found.');
+  process.exit(1);
+}
+
+if (!process.env.instagramUsername || !process.env.instagramPassword) {
+  console.error('[error]: instagram auth stuff not found.');
   process.exit(1);
 }
 
