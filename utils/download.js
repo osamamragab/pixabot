@@ -6,7 +6,7 @@ const path = require('path');
 const { promises: fs } = require('fs');
 
 module.exports = async url => {
-  const dlPath = path.join('..', 'tmp', `${genid()}.jpg`);
+  const dlPath = path.join(__dirname, '..', 'tmp', `${genid()}.jpg`);
 
   // get file buffer from url
   const fileBuffer = await fetch(url).then(res => res.buffer());
