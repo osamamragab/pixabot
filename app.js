@@ -1,9 +1,8 @@
-const dotenv = require('dotenv');
 const path = require('path');
 const { promises: fs, existsSync } = require('fs');
 
 if (process.env.NODE_ENV === 'development') {
-  dotenv.config();
+  require('dotenv').config();
 }
 
 if (!process.env.unsplashAccessKey || !process.env.unsplashSecretKey) {
