@@ -1,7 +1,7 @@
 {
   "name": "pixa",
   "version": "1.4.0",
-  "description": "Twitter & Telegram bot that sends a random pic every hour.",
+  "description": "Post daily pic - from unsplash.com & pexels.com to Twitter, Instagram & Telegram.",
   "author": "Osama",
   "license": "MIT",
   "repository": "osamaify/pixabot",
