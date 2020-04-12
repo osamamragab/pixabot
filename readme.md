@@ -2,7 +2,7 @@
 
 > Post daily pic!
 
-get random pic from unsplash.com & pexels.com and push it to Twitter, Instagram & Telegram
+Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram & Instagram
 
 ---
 
@@ -10,6 +10,6 @@ get random pic from unsplash.com & pexels.com and push it to Twitter, Instagram 
 
 #### Twitter: [twitter.com/Pixabot](https://twitter.com/Pixabot)
 
-#### Instagram: [instagram.com/pixa.bot](https://www.instagram.com/pixa.bot)
-
 #### Telegram: [t.me/Pixab](https://t.me/Pixab)
+
+#### Instagram: [instagram.com/pixa.bot](https://www.instagram.com/pixa.bot) (doesn't work yet)
