@@ -1,24 +1,16 @@
 const { IgApiClient } = require('instagram-private-api');
-
+const { promises: fs } = require('fs');
 const { instagramUsername, instagramPassword } = process.env;
 
 const ig = new IgApiClient();
 
 ig.state.generateDevice(instagramUsername);
 
-(async () => {
-  await ig.simulate.preLoginFlow();
-
+module.exports = async (picPath, caption) => {
   await ig.account.login(instagramUsername, instagramPassword);
 
-  process.nextTick(async () => {
-    await ig.simulate.postLoginFlow();
-  });
-})();
-
-module.exports = async (picPath, caption) => {
   const mediaRepo = await ig.publish.photo({
-    file: picPath,
+    file: await fs.readFile(picPath),
     caption
   });
 
