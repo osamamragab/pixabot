@@ -1,5 +1,7 @@
 const { IgApiClient } = require('instagram-private-api');
-const { promises: fs } = require('fs');
+const {
+  promises: { readFile }
+} = require('fs');
 
 const { instagramUsername, instagramPassword } = process.env;
 
@@ -13,11 +15,11 @@ module.exports = async (picPath, caption) => {
 
     loggedInUser = await ig.account.login(instagramUsername, instagramPassword);
 
-    console.log('instagram logged in successfully');
+    console.log('(instagram) logged in successfully');
   }
 
   const mediaRepo = await ig.publish.photo({
-    file: await fs.readFile(picPath),
+    file: await readFile(picPath),
     caption
   });
 
