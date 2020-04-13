@@ -12,4 +12,4 @@ Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram &
 
 #### Telegram: [t.me/Pixab](https://t.me/Pixab)
 
-#### Instagram: [instagram.com/pixa.bot](https://www.instagram.com/pixa.bot) (doesn't work yet)
+#### Instagram: [instagram.com/pixa.bot](https://www.instagram.com/pixa.bot)
