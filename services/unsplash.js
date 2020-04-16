@@ -15,7 +15,7 @@ module.exports = async () => {
 
   return {
     id: pic.id,
-    platfrom: 'Unsplash',
+    platform: 'Unsplash',
     width: pic.width,
     height: pic.height,
     urls: {

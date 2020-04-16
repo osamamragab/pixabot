@@ -23,9 +23,13 @@ module.exports = async (picPath, caption) => {
     caption
   });
 
-  console.log(
-    `(instagram): https://www.instagram.com/p/${mediaRepo.media.code}`
-  );
+  if (mediaRepo.status === 'ok') {
+    console.log(
+      `(instagram): https://www.instagram.com/p/${mediaRepo.media.code}`
+    );
+  } else {
+    console.error('(instagram): faild to upload');
+  }
 
   return mediaRepo;
 };

@@ -1,23 +1,34 @@
+const probe = require('probe-image-size');
 const fetch = require('node-fetch');
 const imagemin = require('imagemin');
 const imageminJpegtran = require('imagemin-jpegtran');
-const genid = require('./genid');
 const path = require('path');
-const { promises: fs } = require('fs');
+const {
+  promises: { writeFile }
+} = require('fs');
 
 module.exports = async url => {
-  const dlPath = path.join(__dirname, '..', 'tmp', `${genid()}.jpg`);
+  // get pic info
+  const picInfo = await probe(url);
+
+  // TODO: test pic ratio before downloading
+  // picInfo.width
+
+  // generate an id
+  const id = Math.floor(Math.random() * 1000000000);
+
+  // download image to path
+  const dlPath = path.join(__dirname, '..', 'tmp', `pixahub-${id}.jpg`);
 
   // get file buffer from url
-  const fileBuffer = await fetch(url).then(res => res.buffer());
+  const dataBuffer = await fetch(url).then(res => res.buffer());
 
   // minify file buffer
-  const buffer = await imagemin.buffer(fileBuffer, {
+  const minifedBuffer = await imagemin.buffer(dataBuffer, {
     plugins: [imageminJpegtran()]
   });
 
-  // download the file to dlPath
-  await fs.writeFile(dlPath, buffer, 'binary');
+  await writeFile(dlPath, minifedBuffer);
 
   return dlPath;
 };

@@ -59,7 +59,7 @@ async function main() {
     console.log(`(${pic.id}) downloaded to ${picPath} successfully`);
 
     // set caption
-    const caption = `by: ${pic.author.name.trim()} on ${pic.platfrom}`;
+    const caption = `by: ${pic.author.name.trim()} on ${pic.platform}`;
 
     // publish the pic to all platforms
     await push(picPath, caption);
