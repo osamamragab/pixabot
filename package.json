@@ -13,7 +13,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "clean": "rimraf tmp"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
@@ -27,6 +28,7 @@
     "unsplash-js": "^6.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "rimraf": "^3.0.2"
   }
 }
