@@ -1,6 +1,6 @@
 {
   "name": "pixa",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram & Instagram.",
   "author": "Osama",
   "license": "MIT",
@@ -23,7 +23,6 @@
     "node-fetch": "^2.6.0",
     "node-telegram-bot-api": "^0.40.0",
     "pexels-api-wrapper": "^1.1.1",
-    "probe-image-size": "^5.0.0",
     "twit": "^2.2.11",
     "unsplash-js": "^6.0.0"
   },
