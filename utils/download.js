@@ -1,4 +1,3 @@
-const probe = require('probe-image-size');
 const fetch = require('node-fetch');
 const imagemin = require('imagemin');
 const imageminJpegtran = require('imagemin-jpegtran');
@@ -8,12 +7,6 @@ const {
 } = require('fs');
 
 module.exports = async url => {
-  // get pic info
-  const picInfo = await probe(url);
-
-  // TODO: test pic ratio before downloading
-  // picInfo.width
-
   // generate an id
   const id = Math.floor(Math.random() * 1000000000);
 
