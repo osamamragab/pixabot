@@ -2,9 +2,7 @@ const fetch = require('node-fetch');
 const imagemin = require('imagemin');
 const imageminJpegtran = require('imagemin-jpegtran');
 const path = require('path');
-const {
-  promises: { writeFile }
-} = require('fs');
+const { promises: fs } = require('fs');
 
 module.exports = async url => {
   // generate an id
@@ -21,7 +19,8 @@ module.exports = async url => {
     plugins: [imageminJpegtran()]
   });
 
-  await writeFile(dlPath, minifedBuffer);
+  // write buffer data to file
+  await fs.writeFile(dlPath, minifedBuffer);
 
   return dlPath;
 };
