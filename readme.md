@@ -8,8 +8,8 @@ Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram &
 
 ### Follow:
 
-#### Twitter: [twitter.com/Pixabot](https://twitter.com/Pixabot)
+#### Twitter: [twitter.com/pixahub](https://twitter.com/pixahub)
 
-#### Telegram: [t.me/Pixab](https://t.me/Pixab)
+#### Telegram: [t.me/pixahub](https://t.me/pixahub)
 
-#### Instagram: [instagram.com/pixa.bot](https://www.instagram.com/pixa.bot)
+#### Instagram: [instagram.com/pixahub](https://www.instagram.com/pixahub)
