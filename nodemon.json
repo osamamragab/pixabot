@@ -1,0 +1,26 @@
+{
+  "script": "./src/app.ts",
+  "ext": "ts",
+  "verbose": false,
+  "ignore": [
+    "node_modules/",
+    "tmp/",
+    "dist/",
+    ".git/",
+    "package.json",
+    "pnpm-lock.yaml",
+    "pnpm-debug.log",
+    "tsconfig.json",
+    "Procfile",
+    ".env",
+    ".env.example",
+    ".eslintrc.json",
+    ".eslintignore",
+    ".prettierrc.json",
+    ".editorconfig",
+    "readme.md",
+    "license",
+    "nodemon.json",
+    ".gitignore"
+  ]
+}
