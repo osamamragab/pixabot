@@ -1,6 +1,6 @@
 {
   "name": "pixa",
-  "version": "1.4.1",
+  "version": "1.5.2",
   "description": "Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram & Instagram.",
   "author": "Osama",
   "license": "MIT",
@@ -12,23 +12,34 @@
     "pnpm": "4.x"
   },
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "clean": "rimraf tmp"
+    "start": "node dist/app.js",
+    "build": "npm run clean && tsc -p .",
+    "dev": "nodemon",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "clean": "rimraf dist"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
+    "form-data": "^3.0.0",
     "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^6.0.0",
-    "instagram-private-api": "^1.39.2",
-    "node-fetch": "^2.6.0",
-    "node-telegram-bot-api": "^0.40.0",
-    "pexels-api-wrapper": "^1.1.1",
-    "twit": "^2.2.11",
-    "unsplash-js": "^6.0.0"
+    "instagram-private-api": "^1.39.2"
   },
   "devDependencies": {
+    "@types/imagemin": "^7.0.0",
+    "@types/imagemin-jpegtran": "^5.0.0",
+    "@types/node": "^13.13.4",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
     "nodemon": "^2.0.3",
-    "rimraf": "^3.0.2"
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.9.1",
+    "typescript": "^3.8.3"
   }
 }
