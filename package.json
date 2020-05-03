@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "node dist/app.js",
+    "start:ts": "ts-node src/app.ts",
     "build": "npm run clean && tsc -p .",
     "dev": "nodemon",
     "lint": "eslint src/**/*.ts",
