@@ -29,18 +29,21 @@ interface PexelsAPIPhoto {
   };
 }
 
-const BASE_URL: string = 'https://api.pexels.com/v1/curated';
+const curatedPhotoURL: string = 'https://api.pexels.com/v1/curated';
 
 export default async (): Promise<PixaPic> => {
-  const { data: pexelsData } = await axios.get<PexelsAPIResponse>(BASE_URL, {
-    headers: {
-      Authorization: PEXELS_API_KEY
-    },
-    params: {
-      per_page: 1,
-      page: Math.floor(Math.random() * (6327 - 1 + 1) + 1)
+  const { data: pexelsData } = await axios.get<PexelsAPIResponse>(
+    curatedPhotoURL,
+    {
+      headers: {
+        Authorization: PEXELS_API_KEY
+      },
+      params: {
+        per_page: 1,
+        page: Math.floor(Math.random() * (6327 - 1 + 1) + 1)
+      }
     }
-  });
+  );
 
   const pic: PexelsAPIPhoto = pexelsData.photos[0];
 
