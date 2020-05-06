@@ -1,6 +1,7 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import { TELEGRAM_TOKEN, TELEGRAM_CHAT } from '../utils/config';
+
+const { TELEGRAM_TOKEN, TELEGRAM_CHAT } = process.env;
 
 interface TelegramAPIMessage {
   message_id: number;

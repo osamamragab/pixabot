@@ -1,3 +1,5 @@
+import './utils/config';
+
 import getPic, { PixaPic } from './utils/getPic';
 import download from './utils/download';
 import publish from './utils/publish';

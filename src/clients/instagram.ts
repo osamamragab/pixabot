@@ -3,7 +3,8 @@ import {
   MediaRepositoryConfigureResponseRootObject,
   AccountRepositoryLoginResponseLogged_in_user
 } from 'instagram-private-api';
-import { INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD } from '../utils/config';
+
+const { INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD } = process.env;
 
 const ig: IgApiClient = new IgApiClient();
 
