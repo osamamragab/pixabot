@@ -3,9 +3,11 @@ import telegram from '../lib/telegram';
 import instagram from '../lib/instagram';
 
 export default async (buffer: Buffer, caption: string): Promise<void> => {
-  await twitter(buffer, caption);
-  await telegram(buffer, caption);
-  await instagram(buffer, caption);
+  await Promise.all([
+    twitter(buffer, caption),
+    telegram(buffer, caption),
+    instagram(buffer, caption)
+  ]);
 
   console.log('pushed to all');
 };
