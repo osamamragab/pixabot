@@ -1,5 +1,4 @@
 import './utils/config';
-
 import getPic, { PixaPic } from './utils/getPic';
 import download from './utils/download';
 import publish from './utils/publish';
@@ -31,5 +30,4 @@ async function main(): Promise<void> {
 main();
 
 // run every day
-setInterval(main, 60 * 1000);
-// setInterval(main, 24 * 60 * 60 * 1000);
+setInterval(main, 24 * 60 * 60 * 1000);
