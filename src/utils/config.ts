@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (!process.env.UNSPLASH_ACCESS_KEY) {
-  console.error('[error]: unsplash api keys not found.');
+  console.error('[error]: unsplash access key not found.');
   process.exit(1);
 }
 
