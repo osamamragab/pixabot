@@ -1,6 +1,6 @@
-import twitter from '../lib/twitter';
-import telegram from '../lib/telegram';
-import instagram from '../lib/instagram';
+import twitter from '../clients/twitter';
+import telegram from '../clients/telegram';
+import instagram from '../clients/instagram';
 
 export default async (buffer: Buffer, caption: string): Promise<void> => {
   await Promise.all([
