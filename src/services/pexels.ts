@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { PEXELS_API_KEY } from '../utils/config';
 import type { PixaPic } from '../utils/getPic';
 
 interface PexelsAPIResponse {
@@ -28,6 +27,8 @@ interface PexelsAPIPhoto {
     tiny: string;
   };
 }
+
+const { PEXELS_API_KEY } = process.env;
 
 const curatedPhotoURL: string = 'https://api.pexels.com/v1/curated';
 

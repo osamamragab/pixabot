@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { UNSPLASH_ACCESS_KEY } from '../utils/config';
 import type { PixaPic } from '../utils/getPic';
 
 interface UnsplashAPI {
@@ -21,6 +20,8 @@ interface UnsplashAPI {
     };
   };
 }
+
+const { UNSPLASH_ACCESS_KEY } = process.env;
 
 const randomPhotoURL: string = 'https://api.unsplash.com/photos/random';
 
