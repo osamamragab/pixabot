@@ -17,7 +17,6 @@ export interface PixaPic {
   };
 }
 
-// list of platforms (Pics APIs)
 export const platforms: string[] = ['unsplash', 'pexels'];
 
 export default async (): Promise<PixaPic> => {

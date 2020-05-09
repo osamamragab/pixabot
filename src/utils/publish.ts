@@ -8,6 +8,4 @@ export default async (buffer: Buffer, caption: string): Promise<void> => {
     telegram(buffer, caption),
     instagram(buffer, caption)
   ]);
-
-  console.log('pushed to all');
 };

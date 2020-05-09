@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 
-// load env vars in development mode
 if (process.env.NODE_ENV === 'development') {
   dotenv.config();
 }
