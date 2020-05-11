@@ -31,7 +31,8 @@ export default async (): Promise<PixaPic> => {
       Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`
     },
     params: {
-      featured: true
+      featured: true,
+      orientation: 'landscape'
     }
   });
 
