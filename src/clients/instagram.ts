@@ -19,7 +19,7 @@ export default async (buffer: Buffer, caption: string): Promise<void> => {
       INSTAGRAM_PASSWORD
     );
 
-    console.log('(instagram) logged in successfully');
+    console.log('(instagram): logged in successfully');
   }
 
   const mediaRepo: MediaRepositoryConfigureResponseRootObject = await ig.publish.photo(
