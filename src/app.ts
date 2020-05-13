@@ -6,7 +6,7 @@ import publish from './utils/publish';
 async function main(): Promise<void> {
   try {
     const pic: PixaPic = await getPic();
-    const buffer: Buffer = await download(pic.urls.medium);
+    const buffer: Buffer = await download(pic.dl);
     const caption: string = `by: ${pic.author.name.trim()} on #${pic.platform}`;
 
     console.log(`(${pic.id}) downloaded successfully`);
