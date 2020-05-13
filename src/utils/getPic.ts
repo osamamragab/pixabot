@@ -6,31 +6,23 @@ export interface PixaPic {
   width: number;
   height: number;
   platform: 'Unsplash' | 'Pexels';
-  urls: {
-    original: string;
-    medium: string;
-    small: string;
-  };
+  dl: string;
   author: {
     id: string | number;
     name: string;
   };
 }
 
-export const platforms: string[] = ['unsplash', 'pexels'];
+const platforms: object = { unsplash, pexels };
+const platFormsKeys: string[] = Object.keys(platforms);
+
+let currentPlatform: string = '';
 
 export default async (): Promise<PixaPic> => {
-  const getFrom: string = process.env.PIC_PLATFORM || platforms[0];
+  const getFrom: string = currentPlatform || platFormsKeys[0];
 
   // set platform for the next time
-  process.env.PIC_PLATFORM = platforms[platforms.indexOf(getFrom) + 1];
+  currentPlatform = platFormsKeys[platFormsKeys.indexOf(getFrom) + 1];
 
-  switch (getFrom) {
-    case 'unsplash':
-      return await unsplash();
-
-    case 'pexels':
-    default:
-      return await pexels();
-  }
+  return await platforms[getFrom]();
 };
