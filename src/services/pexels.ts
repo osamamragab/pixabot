@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import type { PixaPic } from '../utils/getPic';
 
 interface PexelsAPIResponse {
@@ -32,32 +32,42 @@ const { PEXELS_API_KEY } = process.env;
 
 const curatedPhotoURL: string = 'https://api.pexels.com/v1/curated';
 
+const maxCuratedPhotosCount: number = 6296;
+
+function getRandomPage(): number {
+  return Math.floor(Math.random() * maxCuratedPhotosCount + 1);
+}
+
+const requestConfig: AxiosRequestConfig = {
+  headers: {
+    Authorization: PEXELS_API_KEY
+  },
+  params: {
+    per_page: 1
+  }
+};
+
 export default async (): Promise<PixaPic> => {
-  const { data: pexelsData } = await axios.get<PexelsAPIResponse>(
+  requestConfig.params.page = getRandomPage();
+
+  let { data } = await axios.get<PexelsAPIResponse>(
     curatedPhotoURL,
-    {
-      headers: {
-        Authorization: PEXELS_API_KEY
-      },
-      params: {
-        per_page: 1,
-        page: Math.floor(Math.random() * (6327 - 1 + 1) + 1)
-      }
-    }
+    requestConfig
   );
 
-  const pic: PexelsAPIPhoto = pexelsData.photos[0];
+  while (data.photos.length === 0) {
+    data = (await axios.get<PexelsAPIResponse>(data.prev_page, requestConfig))
+      .data;
+  }
+
+  const pic: PexelsAPIPhoto = data.photos[0];
 
   return {
     id: pic.id,
     width: pic.width,
     height: pic.height,
     platform: 'Pexels',
-    urls: {
-      original: pic.src.original,
-      medium: pic.src.medium,
-      small: pic.src.small
-    },
+    dl: pic.src.landscape,
     author: {
       id: pic.photographer_id,
       name: pic.photographer
