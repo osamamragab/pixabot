@@ -6,6 +6,28 @@ Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram &
 
 ---
 
+### Setup Instructions
+
+Install dependencies
+```bash
+yarn install # or npm install
+```
+
+Create .env file and add your tokens and API keys (as described in [.env.example](https://github.com/osamaify/pixabot/blob/main/.env.example))
+
+Run on production
+```bash
+yarn build # or npm run build
+yarn start # or npm start
+```
+
+Run on development
+```bash
+yarn dev # or npm run dev
+```
+
+---
+
 ### Follow:
 
 #### Twitter: [twitter.com/pixahub](https://twitter.com/pixahub)
