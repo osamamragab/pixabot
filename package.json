@@ -4,7 +4,7 @@
   "description": "Get random pic from unsplash.com & pexels.com and push it to Twitter, Telegram & Instagram.",
   "author": "Osama",
   "license": "MIT",
-  "repository": "osamaify/pixabot",
+  "repository": "osamai/pixabot",
   "main": "app.js",
   "private": true,
   "engines": {
