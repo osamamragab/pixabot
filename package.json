@@ -9,7 +9,7 @@
   "private": true,
   "engines": {
     "node": ">= 10.x",
-    "pnpm": "4.x"
+    "yarn": "1.22.x"
   },
   "scripts": {
     "start": "node dist/app.js",
